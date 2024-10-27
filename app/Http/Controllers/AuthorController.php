@@ -30,10 +30,16 @@ class AuthorController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => ['required'],
-            'bio' => ['required']
+            'name' => 'required|max:255',
+            'bio' => 'required|string|min:100|max:1000',
+        ], [
+            'name.required' => 'El nombre del autor es obligatorio.',
+            'bio.required' => 'La biografía del autor es obligatoria.',
+            'name.max' => 'El nombre no debe exceder los 255 caracteres.',
+            'bio.min' => 'La biografía es muy corta (mínimo 100 caracteres)',
+            'bio.max' => 'La biografía no debe exceder los 1000 caracteres.'
         ]);
-
+        
         $author = Author::create($request->all());
 
         return redirect()->route('author.index');
@@ -60,6 +66,18 @@ class AuthorController extends Controller
      */
     public function update(Request $request, Author $author)
     {
+        $request->validate([
+            'name' => 'required|max:255',
+            'bio' => 'required|string|min:100|max:1000',
+        ], [
+            'name.required' => 'El nombre del autor es obligatorio.',
+            'bio.required' => 'La biografía del autor es obligatoria.',
+            'name.max' => 'El nombre no debe exceder los 255 caracteres.',
+            'bio.min' => 'La biografía es muy corta (mínimo 100 caracteres)',
+            'bio.max' => 'La biografía no debe exceder los 1000 caracteres.'
+        ]);
+
+        
         $author->update($request->all());
         return redirect()->route('author.show', $author);
     }

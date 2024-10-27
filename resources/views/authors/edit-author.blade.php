@@ -13,13 +13,13 @@
         @csrf
         @method('PATCH')
         <label for="name">Nombre: </label> <br>
-        <input type="text" name="name" id="name" value="{{ old('name') ?? $author->name }}" required> <br> <br>
+        <input type="text" name="name" id="name" value="{{ old('name') ?? $author->name }}" required maxlength="255"> <br> <br>
         @error('name')
             <div class="invalid-feedback"> {{ $message }} </div>
         @enderror
 
         <label for="bio">Biografía</label> <br>
-        <textarea name="bio" id="bio" cols="30" rows="10" required>{{ old('bio') ?? $author->bio }}</textarea> <br> <br>
+        <textarea name="bio" id="bio" cols="30" rows="10" required minlength="100" maxlength="1000">{{ old('bio') ?? $author->bio }}</textarea> <br> <br>
         @error('bio')
              <div class="invalid-feedback"> {{ $message }} </div>
         @enderror

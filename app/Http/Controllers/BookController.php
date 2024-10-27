@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\Author;
 use Illuminate\Http\Request;
 
 class BookController extends Controller
@@ -12,7 +13,8 @@ class BookController extends Controller
      */
     public function index()
     {
-        //
+        $books = Book::with('author')->get();
+        return view('books.index-book', compact('books'));
     }
 
     /**
@@ -20,7 +22,8 @@ class BookController extends Controller
      */
     public function create()
     {
-        //
+        $authors = Author::all();
+        return view('books.create-book', compact('authors'));
     }
 
     /**
@@ -28,7 +31,24 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate(
+            [
+                'title' => 'required|min:10',
+                'description' => 'required|min:100',
+                'author_id' => 'required|exists:authors,id',
+            ],
+    
+            [
+                'title.required' => 'El título del libro es obligatorio',
+                'title.min' => 'El título del libro es muy corto (mínimo 10 caracteres)',
+                'description.required' => 'La descripción del libro es obligatoria',
+                'description.min' => 'La descripción del libro es muy corta (mínimo 100 caracteres)',
+                'author_id.required' => 'El autor es obligatorio'
+            ]);
+
+        $book = Book::create($request->all());
+
+        return redirect()->route('book.index');
     }
 
     /**
@@ -36,7 +56,8 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        //
+        $authors = Author::all();
+        return view('books.show-book', compact('book', 'authors'));
     }
 
     /**
@@ -44,7 +65,8 @@ class BookController extends Controller
      */
     public function edit(Book $book)
     {
-        //
+        $authors = Author::with('books')->get();
+        return view('books.edit-book', compact('book', 'authors'));
     }
 
     /**
@@ -52,7 +74,23 @@ class BookController extends Controller
      */
     public function update(Request $request, Book $book)
     {
-        //
+        $request->validate(
+            [
+                'title' => 'required|min:10',
+                'description' => 'required|min:100',
+                'author_id' => 'required|exists:authors,id',
+            ],
+    
+            [
+                'title.required' => 'El título del libro es obligatorio',
+                'title.min' => 'El título del libro es muy corto (mínimo 10 caracteres)',
+                'description.required' => 'La descripción del libro es obligatoria',
+                'description.min' => 'La descripción del libro es muy corta (mínimo 100 caracteres)',
+                'author_id.required' => 'El autor es obligatorio'
+            ]);
+
+        $book->update($request->all());
+        return redirect()->route('book.show', compact('book'));
     }
 
     /**
@@ -60,6 +98,7 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
-        //
+        $book->delete();
+        return redirect()->route('book.index');
     }
 }

@@ -10,7 +10,7 @@ class Genre extends Model
     /** @use HasFactory<\Database\Factories\GenreFactory> */
     use HasFactory;
 
-    // public function books(){
-    //     $this->belongsToMany(Book::class);
-    // }
+    public function books(){
+        $this->belongsToMany(Book::class);
+    }
 }
