@@ -16,6 +16,7 @@
                 <th>Título</th>
                 <th>Descripción</th>
                 <th>Autor</th>
+                <th>Género(s)</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -37,6 +38,12 @@
 
                     <td>
                         <p> {{ $book->author->name }} </p>
+                    </td>
+
+                    <td>
+                        @foreach($book->genres as $genre)
+                            {{ $genre->name }}
+                        @endforeach
                     </td>
 
                     <td>

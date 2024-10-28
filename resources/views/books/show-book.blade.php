@@ -33,6 +33,19 @@
                 </option>
             @endforeach
         </select>
+
+        <br><br>
+
+        <label for="genres">Géneros</label>
+        <select disabled name="genres[]" id="genres" multiple>
+            @foreach ($genres as $genre)
+                <option value=" {{ $genre->id }} " 
+                    @if($book->genres->contains($genre->id)) selected  @endif>
+                {{ $genre->name }}
+                </option>
+            @endforeach
+        </select>
+        
         <br><br>
 
         <a href=" {{ route('book.index') }} ">OK</a>

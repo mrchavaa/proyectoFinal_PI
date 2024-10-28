@@ -31,6 +31,15 @@
         </select>
         <br><br>
 
+        <label for="genres">Géneros</label>
+        <select name="genres[]" id="genres" multiple>
+            @foreach ($genres as $genre)
+                <option value=" {{ $genre->id }} "> {{ $genre->name }} </option>
+            @endforeach
+        </select>
+
+        <br><br>
+
         <button type="submit" id="btnSendForm">Guardar Libro</button>
     </form>
 </body>

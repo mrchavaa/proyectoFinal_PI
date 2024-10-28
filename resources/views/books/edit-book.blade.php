@@ -33,6 +33,18 @@
                 </option>
             @endforeach
         </select>
+
+        <label for="genres">Géneros</label>
+        <select name="genres[]" id="genres" multiple>
+            @foreach ($genres as $genre)
+                <option value=" {{ $genre->id }} " 
+                    @if($book->genres->contains($genre->id)) selected  @endif>
+                {{ $genre->name }}
+                </option>
+            @endforeach
+        </select>
+        
+
         <br><br>
 
         <button type="submit" id="btnSendForm">Guardar</button>
