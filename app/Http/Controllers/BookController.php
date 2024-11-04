@@ -6,6 +6,7 @@ use App\Models\Book;
 use App\Models\Author;
 use App\Models\Genre;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BookController extends Controller
 {
@@ -49,6 +50,12 @@ class BookController extends Controller
                 'author_id.required' => 'El autor es obligatorio',
                 'genres.required' => 'El libro debe pertenecer al menos a un género'
             ]);
+
+        /*ASIGNARLE AL LIBRO QUE SE ESTÁ CREANDO
+        EL ID DEL USUARIO QUE LO CREÓ*/
+        $request->merge([
+            'user_id' => Auth::id()
+        ]);
 
         $book = Book::create($request->all());
         $book->genres()->attach($request->genres);

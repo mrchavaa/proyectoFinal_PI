@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Author;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +19,10 @@ class BookFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->sentence(),
+            'title' => fake()->paragraph(),
+            'author_id' => Author::factory(),
+            'user_id' => User::factory()
         ];
     }
 }
