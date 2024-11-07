@@ -29,7 +29,7 @@
                     </td>
                     
                     <td>
-                        <p> {{ $book->title }} </p>
+                        <a href=" {{ route('book.show', $book) }} "> {{ $book->title }} </a>
                     </td>
 
                     <td>
@@ -37,7 +37,7 @@
                     </td>
 
                     <td>
-                        <p> {{ $book->author->name }} </p>
+                        <a href=" {{ route('author.show', $book->author) }} "> {{ $book->author->name }} </a>
                     </td>
 
                     <td>

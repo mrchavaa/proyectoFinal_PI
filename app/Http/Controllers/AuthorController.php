@@ -22,7 +22,10 @@ class AuthorController extends Controller implements HasMiddleware
      */
     public function index()
     {
-        $authors = Author::all();
+        /*Cargar relación de Author con Book
+        (un autor puede tener muchos libros)
+        para resolver problema de N+1 consultas*/
+        $authors = Author::with('books')->get();
         return view('authors.index-author', compact('authors'));
     }
 

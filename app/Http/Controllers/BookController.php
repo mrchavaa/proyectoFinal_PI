@@ -26,6 +26,9 @@ class BookController extends Controller implements HasMiddleware
      */
     public function index()
     {
+        /*Cargar relación de Book con Author
+        (cada libro le pertenece a un autor)
+        para resolver problema de N+1 consultas*/
         $books = Book::with('author')->get();
         return view('books.index-book', compact('books'));
     }
@@ -35,6 +38,10 @@ class BookController extends Controller implements HasMiddleware
      */
     public function create()
     {
+        /*Se utiliza all() en ambos modelos porque no es 
+        necesario cargar las relaciones, ya que la idea es
+        mostrar al usuario los autores y los géneros que hay
+        disponibles para que los asigne al libro que está creando*/
         $authors = Author::all();
         $genres = Genre::all();
         return view('books.create-book', compact('authors', 'genres'));
@@ -79,6 +86,10 @@ class BookController extends Controller implements HasMiddleware
      */
     public function show(Book $book)
     {
+         /*Se utiliza all() en ambos modelos porque no es 
+        necesario cargar las relaciones, ya que la idea es
+        mostrar al usuario los autores y los géneros que hay
+        disponibles mediante la vista para que pueda verlos*/
         $authors = Author::all();
         $genres = Genre::all();
         return view('books.show-book', compact('book', 'authors', 'genres'));
@@ -91,7 +102,14 @@ class BookController extends Controller implements HasMiddleware
     {
         try{
             Gate::authorize('update', $book);
+
+            /*Cargar relación de Author con Book
+            (un autor puede tener muchos libros)
+            para resolver problema de N+1 consultas*/
             $authors = Author::with('books')->get();
+            
+            /*Solo mostrar los géneros, no es necesario
+            cargar la relación con Book*/
             $genres = Genre::all();
             return view('books.edit-book', compact('book', 'authors', 'genres'));
         } catch(AuthorizationException $e){

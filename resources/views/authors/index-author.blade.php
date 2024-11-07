@@ -15,6 +15,7 @@
                 <th>ID</th>
                 <th>Autor</th>
                 <th>Biografía</th>
+                <th>Libros</th>
                 @can('delete', $authors[0])
                     <th>Acciones</th>
                 @endcan
@@ -29,11 +30,17 @@
                     </td>
                     
                     <td>
-                        <p> {{ $author->name }} </p>
+                        <a href="{{ route('author.show', $author) }}"> {{ $author->name }} </a>
                     </td>
 
                     <td>
                         <p> {{ $author->bio }} </p>
+                    </td>
+
+                    <td>
+                        @foreach($author->books as $book)
+                            <a href=" {{ route('book.show', $book) }} "> {{ $book->title }} </a>
+                        @endforeach
                     </td>
 
                     @can('delete', $author)
