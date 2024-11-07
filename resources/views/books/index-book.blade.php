@@ -47,13 +47,19 @@
                     </td>
 
                     <td>
-                        <a href=" {{ route('book.edit', $book) }} ">Editar</a>
+                        @canany(['delete', 'update'], $book)
+                            <a href=" {{ route('book.edit', $book) }} ">Editar</a>
 
-                        <form action=" {{ route('book.destroy', $book) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" onclick="return confirm('¿Estás seguro de eliminar este libro?');">Eliminar</button>
-                        </form>
+                            <form action=" {{ route('book.destroy', $book) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" onclick="return confirm('¿Estás seguro de eliminar este libro?');">Eliminar</button>
+                            </form>   
+                        @endcanany
+
+                        @cannot(['delete', 'update'], $book)
+                            <p> No eres el propietario </p>
+                        @endcannot
                     </td>
                 </tr>
             @endforeach

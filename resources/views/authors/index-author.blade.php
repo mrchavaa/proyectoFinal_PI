@@ -15,7 +15,9 @@
                 <th>ID</th>
                 <th>Autor</th>
                 <th>Biografía</th>
-                <th>Acciones</th>
+                @can('delete', $authors[0])
+                    <th>Acciones</th>
+                @endcan
             </tr>
         </thead>
 
@@ -34,15 +36,17 @@
                         <p> {{ $author->bio }} </p>
                     </td>
 
+                    @can('delete', $author)
                     <td>
                         <a href=" {{ route('author.edit', $author) }} ">Editar</a>
 
                         <form action=" {{ route('author.destroy', $author) }}" method="POST">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" onclick="return confirm('¿Estás seguro de eliminar a este autor?');">Eliminar</button>
+                                <button type="submit" onclick="return confirm('¿Estás seguro de eliminar a este autor?');">Eliminar</button>
                         </form>
                     </td>
+                    @endcan
                 </tr>
             @endforeach
         </tbody>

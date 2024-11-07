@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Author;
 use App\Models\Genre;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class BookController extends Controller implements HasMiddleware
 {
@@ -86,9 +89,15 @@ class BookController extends Controller implements HasMiddleware
      */
     public function edit(Book $book)
     {
-        $authors = Author::with('books')->get();
-        $genres = Genre::all();
-        return view('books.edit-book', compact('book', 'authors', 'genres'));
+        try{
+            Gate::authorize('update', $book);
+            $authors = Author::with('books')->get();
+            $genres = Genre::all();
+            return view('books.edit-book', compact('book', 'authors', 'genres'));
+        } catch(AuthorizationException $e){
+            return redirect()->route('book.index')->with('No eres el propietario de este libro');
+        }
+
     }
 
     /**
@@ -96,26 +105,32 @@ class BookController extends Controller implements HasMiddleware
      */
     public function update(Request $request, Book $book)
     {
-        $request->validate(
-            [
-                'title' => 'required|min:10',
-                'description' => 'required|min:100',
-                'author_id' => 'required|exists:authors,id',
-                'genres' => 'required'
-            ],
+        try{
+            Gate::authorize('update', $book);
+            $request->validate(
+                [
+                    'title' => 'required|min:10',
+                    'description' => 'required|min:100',
+                    'author_id' => 'required|exists:authors,id',
+                    'genres' => 'required'
+                ],
+        
+                [
+                    'title.required' => 'El título del libro es obligatorio',
+                    'title.min' => 'El título del libro es muy corto (mínimo 10 caracteres)',
+                    'description.required' => 'La descripción del libro es obligatoria',
+                    'description.min' => 'La descripción del libro es muy corta (mínimo 100 caracteres)',
+                    'author_id.required' => 'El autor es obligatorio',
+                    'genres.required' => 'El libro debe pertenecer al menos a un género'
+                ]);
     
-            [
-                'title.required' => 'El título del libro es obligatorio',
-                'title.min' => 'El título del libro es muy corto (mínimo 10 caracteres)',
-                'description.required' => 'La descripción del libro es obligatoria',
-                'description.min' => 'La descripción del libro es muy corta (mínimo 100 caracteres)',
-                'author_id.required' => 'El autor es obligatorio',
-                'genres.required' => 'El libro debe pertenecer al menos a un género'
-            ]);
+            $book->update($request->all());
+            $book->genres()->sync($request->genres);
+            return redirect()->route('book.show', compact('book'));
+        } catch(AuthorizationException $e){
+            return redirect()->route('book.index')->with('No eres el propietario de este libro');
+        }
 
-        $book->update($request->all());
-        $book->genres()->sync($request->genres);
-        return redirect()->route('book.show', compact('book'));
     }
 
     /**
@@ -123,7 +138,13 @@ class BookController extends Controller implements HasMiddleware
      */
     public function destroy(Book $book)
     {
-        $book->delete();
-        return redirect()->route('book.index');
+        try{
+            Gate::authorize('delete', $book);
+            $book->delete();
+            return redirect()->route('book.index');
+        } catch(AuthorizationException $e){
+            return redirect()->route('book.index')->with('No puedes eliminar este libro porque no eres el propietario');
+        }
+
     }
 }

@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Author;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Gate;
 
 class AuthorController extends Controller implements HasMiddleware
 {
@@ -29,7 +31,14 @@ class AuthorController extends Controller implements HasMiddleware
      */
     public function create()
     {
-        return view('authors.create-author');
+        try{
+            Gate::authorize('create');
+            return view('authors.create');
+
+        } catch(AuthorizationException $e){
+            return redirect()->route('author.index')->with('Error', 'No tienes permisos para crear un autor');
+        }
+
     }
 
     /**
@@ -37,20 +46,28 @@ class AuthorController extends Controller implements HasMiddleware
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|max:255',
-            'bio' => 'required|string|min:100|max:1000',
-        ], [
-            'name.required' => 'El nombre del autor es obligatorio.',
-            'bio.required' => 'La biografía del autor es obligatoria.',
-            'name.max' => 'El nombre no debe exceder los 255 caracteres.',
-            'bio.min' => 'La biografía es muy corta (mínimo 100 caracteres)',
-            'bio.max' => 'La biografía no debe exceder los 1000 caracteres.'
-        ]);
-        
-        $author = Author::create($request->all());
+        try{
+            Gate::authorize('create');
 
-        return redirect()->route('author.index');
+            $request->validate([
+                'name' => 'required|max:255',
+                'bio' => 'required|string|min:100|max:1000',
+            ], [
+                'name.required' => 'El nombre del autor es obligatorio.',
+                'bio.required' => 'La biografía del autor es obligatoria.',
+                'name.max' => 'El nombre no debe exceder los 255 caracteres.',
+                'bio.min' => 'La biografía es muy corta (mínimo 100 caracteres)',
+                'bio.max' => 'La biografía no debe exceder los 1000 caracteres.'
+            ]);
+            
+            $author = Author::create($request->all());
+    
+            return redirect()->route('author.index');
+        } catch(AuthorizationException $e){
+            return redirect()->route('author.index')->with('Error', 'No tienes los permisos para crear un autor');
+
+        }
+
     }
 
     /**
@@ -66,7 +83,13 @@ class AuthorController extends Controller implements HasMiddleware
      */
     public function edit(Author $author)
     {
-        return view('authors.edit-author', compact('author'));
+        try{
+            Gate::authorize('update', $author);
+            return view('authors.edit-author', compact('author'));
+        } catch(AuthorizationException $e){
+            return redirect()->route('author.index')->with('Error', 'No tienes los permisos para editar un autor');
+        }
+
     }
 
     /**
@@ -74,20 +97,28 @@ class AuthorController extends Controller implements HasMiddleware
      */
     public function update(Request $request, Author $author)
     {
-        $request->validate([
-            'name' => 'required|max:255',
-            'bio' => 'required|string|min:100|max:1000',
-        ], [
-            'name.required' => 'El nombre del autor es obligatorio.',
-            'bio.required' => 'La biografía del autor es obligatoria.',
-            'name.max' => 'El nombre no debe exceder los 255 caracteres.',
-            'bio.min' => 'La biografía es muy corta (mínimo 100 caracteres)',
-            'bio.max' => 'La biografía no debe exceder los 1000 caracteres.'
-        ]);
+        try{
+            Gate::authorize('update', $author);
 
-        
-        $author->update($request->all());
-        return redirect()->route('author.show', $author);
+            $request->validate([
+                'name' => 'required|max:255',
+                'bio' => 'required|string|min:100|max:1000',
+            ], [
+                'name.required' => 'El nombre del autor es obligatorio.',
+                'bio.required' => 'La biografía del autor es obligatoria.',
+                'name.max' => 'El nombre no debe exceder los 255 caracteres.',
+                'bio.min' => 'La biografía es muy corta (mínimo 100 caracteres)',
+                'bio.max' => 'La biografía no debe exceder los 1000 caracteres.'
+            ]);
+    
+            
+            $author->update($request->all());
+            return redirect()->route('author.show', $author);
+        } catch(AuthorizationException $e){
+            return redirect()->route('author.index')->with('No tienes los permisos para actualizar un autor');
+
+        }
+
     }
 
     /**
@@ -95,7 +126,13 @@ class AuthorController extends Controller implements HasMiddleware
      */
     public function destroy(Author $author)
     {
-        $author->delete();
-        return redirect()->route('author.index');
+        try{
+            Gate::authorize('delete', $author);
+            $author->delete();
+            return redirect()->route('author.index');
+        } catch(AuthorizationException $e){
+            return redirect()->route('author.index')->with('No tienes los permisos para eliminar un autor');
+        }
+
     }
 }
