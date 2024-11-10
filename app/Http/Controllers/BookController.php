@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NewBookNotification;
 use App\Models\Book;
 use App\Models\Author;
 use App\Models\Genre;
+use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Http\Request;
@@ -12,6 +14,8 @@ use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
+
 
 class BookController extends Controller implements HasMiddleware
 {
@@ -77,6 +81,12 @@ class BookController extends Controller implements HasMiddleware
 
         $book = Book::create($request->all());
         $book->genres()->attach($request->genres);
+
+         // Send email to all subscribers
+         $users = User::pluck('email');
+         foreach ($users as $user) {
+             Mail::to($user)->send(new NewBookNotification($book));
+         }       
 
         return redirect()->route('book.index');
     }
