@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 
@@ -13,8 +14,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/profile', function () {
+    return view('user-profile');
+});
+
 Route::resource('author', AuthorController::class);
 Route::resource('book', BookController::class);
+Route::resource('user', UserController::class);
+
 
 Route::middleware([
     'auth:sanctum',

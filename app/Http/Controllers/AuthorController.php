@@ -35,8 +35,8 @@ class AuthorController extends Controller implements HasMiddleware
     public function create()
     {
         try{
-            Gate::authorize('create');
-            return view('authors.create');
+            Gate::authorize('create-author');
+            return view('authors.create-author');
 
         } catch(AuthorizationException $e){
             return redirect()->route('author.index')->with('Error', 'No tienes permisos para crear un autor');
@@ -50,7 +50,7 @@ class AuthorController extends Controller implements HasMiddleware
     public function store(Request $request)
     {
         try{
-            Gate::authorize('create');
+            Gate::authorize('create-author');
 
             $request->validate([
                 'name' => 'required|max:255',

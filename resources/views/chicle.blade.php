@@ -1,4 +1,3 @@
-
 <!-- 
 =========================================================
  Light Bootstrap Dashboard - v2.0.1
@@ -22,7 +21,7 @@
      <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('assets/img/apple-icon.png') }}">
      <link rel="icon" type="image/png" href=" {{ asset('assets/img/favicon.ico') }} ">
      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-     <title>Index Author</title>
+     <title>Light Bootstrap Dashboard - Free Bootstrap 4 Admin Dashboard by Creative Tim</title>
      <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
      <!--     Fonts and icons     -->
      <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
@@ -49,20 +48,20 @@
                      </a>
                  </div>
                  <ul class="nav">
-                     <li>
-                        <a class="nav-link" href="{{ route('user.index') }}">
-                            <i class="nc-icon nc-map-big"></i>
-                            <p>Perfil</p>
-                        </a>
-                     </li>
-                     <li>
-                        <a class="nav-link" href=" {{ route('book.index') }} ">
-                            <i class="nc-icon nc-circle-09"></i>
-                            <p>Libros</p>
-                        </a>
-                     </li>
                      <li class="nav-item active">
-                         <a class="nav-link" href="{{ route('author.index') }}">
+                         <a class="nav-link" href="dashboard.html">
+                             <i class="nc-icon nc-circle-09"></i>
+                             <p>Perfil</p>
+                         </a>
+                     </li>
+                     <li>
+                         <a class="nav-link" href="./user.html">
+                             <i class="nc-icon nc-map-big"></i>
+                             <p>Libros</p>
+                         </a>
+                     </li>
+                     <li>
+                         <a class="nav-link" href="./table.html">
                              <i class="nc-icon nc-badge"></i>
                              <p>Autores</p>
                          </a>
@@ -169,89 +168,86 @@
              </nav>
              <!-- End Navbar -->
 
+             <button class="btn btn-success">Agregar un libro</button>
 
-<div class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-50">
-                <div class="card strpied-tabled-with-hover">
-                    <div class="card-header">
-                        <h4 style="margin: 10px" class="card-title">Autores registrados</h4>
-                        <a style="margin: 10px" href=" {{ route('author.create') }} " class="btn btn-success">Agregar autor</a>
-                        <p style="margin: 10px" class="card-category">Autores disponibles para asignar a la hora de crear un libro</p>
-                    </div>
-                    <div class="card-body table-full-width table-responsive">
-                        <table class="table table-hover table-striped">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Autor</th>
-                                    <th>Biografía</th>
-                                    <th>Libros</th>
-                                    @can('delete', $authors[0])
-                                        <th>Acciones</th>
-                                    @endcan
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($authors as $author)
-                                <tr>
-                                    <td>
-                                        <p> {{ $author->id }} </p>
-                                    </td>
-                                    
-                                    <td>
-                                        <a href="{{ route('author.show', $author) }}"> {{ $author->name }} </a>
-                                    </td>
-                
-                                    <td>
-                                        <p> {{ $author->bio }} </p>
-                                    </td>
-                
-                                    <td>
-                                        @foreach($author->books as $book)
-                                            <a href=" {{ route('book.show', $book) }} "> {{ $book->title }} </a>
-                                        @endforeach
-                                    </td>
-                
-                                    @can('delete', $author)
-                                    <td>
-                                        <a style="margin: 5px" class="btn btn-warning" href=" {{ route('author.edit', $author) }} ">Editar</a>
-                
-                                        <form action=" {{ route('author.destroy', $author) }}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                                <button style="margin: 5px" class="btn btn-danger" type="submit" onclick="return confirm('¿Estás seguro de eliminar a este autor?');">Eliminar</button>
-                                        </form>
-                                    </td>
-                                    @endcan
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+             <h1>Listado de libros registrados</h1>
+
+             <table border="1">
+                 <thead>
+                     <tr>
+                         <th>ID</th>
+                         <th>Título</th>
+                         <th>Descripción</th>
+                         <th>Autor</th>
+                         <th>Género(s)</th>
+                         <th>Acciones</th>
+                     </tr>
+                 </thead>
+         
+                 <tbody>
+                     @foreach ($books as $book)
+                         <tr>
+                             <td>
+                                 <p> {{ $book->id }} </p>
+                             </td>
+                             
+                             <td>
+                                 <a href=" {{ route('book.show', $book) }} "> {{ $book->title }} </a>
+                             </td>
+         
+                             <td>
+                                 <p> {{ $book->description }} </p>
+                             </td>
+         
+                             <td>
+                                 <a href=" {{ route('author.show', $book->author) }} "> {{ $book->author->name }} </a>
+                             </td>
+         
+                             <td>
+                                 @foreach($book->genres as $genre)
+                                     {{ $genre->name }}
+                                 @endforeach
+                             </td>
+         
+                             <td>
+                                 @canany(['delete', 'update'], $book)
+                                     <a href=" {{ route('book.edit', $book) }} ">Editar</a>
+         
+                                     <form action=" {{ route('book.destroy', $book) }}" method="POST">
+                                         @csrf
+                                         @method('DELETE')
+                                         <button type="submit" onclick="return confirm('¿Estás seguro de eliminar este libro?');">Eliminar</button>
+                                     </form>   
+                                 @endcanany
+         
+                                 @cannot(['delete', 'update'], $book)
+                                     <p> No eres el propietario </p>
+                                 @endcannot
+                             </td>
+                         </tr>
+                     @endforeach
+                 </tbody>
+             </table>
+
+
+
 
              <footer class="footer">
                  <div class="container-fluid">
                      <nav>
                          <ul class="footer-menu">
                              <li>
-                                 <a href="{{ route('user.index') }}">
+                                 <a href="#">
                                      Inicio
                                  </a>
                              </li>
                              <li>
-                                 <a href=" {{ route('book.index') }} ">
+                                 <a href="#">
                                      Libros
                                  </a>
                              </li>
                              <li>
-                                 <a href=" {{ route('author.index') }} ">
+                                 <a href="#">
                                      Autores
                                  </a>
                              </li>

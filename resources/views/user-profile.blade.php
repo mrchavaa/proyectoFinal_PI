@@ -1,4 +1,3 @@
-
 <!-- 
 =========================================================
  Light Bootstrap Dashboard - v2.0.1
@@ -22,7 +21,7 @@
      <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('assets/img/apple-icon.png') }}">
      <link rel="icon" type="image/png" href=" {{ asset('assets/img/favicon.ico') }} ">
      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-     <title>Index Author</title>
+     <title>Light Bootstrap Dashboard - Free Bootstrap 4 Admin Dashboard by Creative Tim</title>
      <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
      <!--     Fonts and icons     -->
      <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
@@ -49,20 +48,20 @@
                      </a>
                  </div>
                  <ul class="nav">
-                     <li>
-                        <a class="nav-link" href="{{ route('user.index') }}">
-                            <i class="nc-icon nc-map-big"></i>
-                            <p>Perfil</p>
-                        </a>
-                     </li>
-                     <li>
-                        <a class="nav-link" href=" {{ route('book.index') }} ">
-                            <i class="nc-icon nc-circle-09"></i>
-                            <p>Libros</p>
-                        </a>
-                     </li>
                      <li class="nav-item active">
-                         <a class="nav-link" href="{{ route('author.index') }}">
+                         <a class="nav-link" href="./profile">
+                             <i class="nc-icon nc-circle-09"></i>
+                             <p>Perfil</p>
+                         </a>
+                     </li>
+                     <li>
+                         <a class="nav-link" href="{{ route('book.index') }}">
+                             <i class="nc-icon nc-map-big"></i>
+                             <p>Libros</p>
+                         </a>
+                     </li>
+                     <li>
+                         <a class="nav-link" href=" {{ route('author.index') }} ">
                              <i class="nc-icon nc-badge"></i>
                              <p>Autores</p>
                          </a>
@@ -169,89 +168,130 @@
              </nav>
              <!-- End Navbar -->
 
+             <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">Editar Perfil</h4>
+                                </div>
+                                <div class="card-body">
+                                    <form>
+                                        <div class="row">
+                                            <div class="col-md-5 pr-1">
+                                                <div class="form-group">
+                                                    <label>ID de usuario</label>
+                                                    <input type="text" class="form-control" disabled placeholder="Company" value="{{ $user->id }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 px-1">
+                                                <div class="form-group">
+                                                    <label>Nombre</label>
+                                                    <input type="text" class="form-control" disabled placeholder="Nombre completo" value="{{ $user->name }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 pl-1">
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1">Correo electrónico</label>
+                                                    <input type="email" class="form-control" disabled placeholder="Correo electrónico" value=" {{ $user->email }} ">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 pr-1">
+                                                <div class="form-group">
+                                                    <label>Fecha de verificación</label>
+                                                    <input type="text" class="form-control" disabled placeholder="Fecha de verificación" value="{{ $user->email_verified_at  }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 pl-1">
+                                                <div class="form-group">
+                                                    <label>Contraseña</label>
+                                                    <input type="password" class="form-control" disabled placeholder="Contraseña" value="{{ $user->password }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>Perfil creado en: </label>
+                                                    <input type="text" class="form-control" disabled placeholder="Home Address" value="{{ $user->created_at }}">
+                                                </div>
+                                            </div>
+                                        </div>
 
-<div class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-50">
-                <div class="card strpied-tabled-with-hover">
-                    <div class="card-header">
-                        <h4 style="margin: 10px" class="card-title">Autores registrados</h4>
-                        <a style="margin: 10px" href=" {{ route('author.create') }} " class="btn btn-success">Agregar autor</a>
-                        <p style="margin: 10px" class="card-category">Autores disponibles para asignar a la hora de crear un libro</p>
-                    </div>
-                    <div class="card-body table-full-width table-responsive">
-                        <table class="table table-hover table-striped">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Autor</th>
-                                    <th>Biografía</th>
-                                    <th>Libros</th>
-                                    @can('delete', $authors[0])
-                                        <th>Acciones</th>
-                                    @endcan
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($authors as $author)
-                                <tr>
-                                    <td>
-                                        <p> {{ $author->id }} </p>
-                                    </td>
-                                    
-                                    <td>
-                                        <a href="{{ route('author.show', $author) }}"> {{ $author->name }} </a>
-                                    </td>
-                
-                                    <td>
-                                        <p> {{ $author->bio }} </p>
-                                    </td>
-                
-                                    <td>
-                                        @foreach($author->books as $book)
-                                            <a href=" {{ route('book.show', $book) }} "> {{ $book->title }} </a>
-                                        @endforeach
-                                    </td>
-                
-                                    @can('delete', $author)
-                                    <td>
-                                        <a style="margin: 5px" class="btn btn-warning" href=" {{ route('author.edit', $author) }} ">Editar</a>
-                
-                                        <form action=" {{ route('author.destroy', $author) }}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                                <button style="margin: 5px" class="btn btn-danger" type="submit" onclick="return confirm('¿Estás seguro de eliminar a este autor?');">Eliminar</button>
-                                        </form>
-                                    </td>
-                                    @endcan
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
+                                        <a href="{{ route('user.index') }}" class="btn btn-info btn-fill pull-right">OK</a>
+  
+                                        <div class="clearfix"></div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card card-user">
+                                <div class="card-image">
+                                    <img src="https://ununsplash.imgix.net/photo-1431578500526-4d9613015464?fit=crop&fm=jpg&h=300&q=75&w=400" alt="...">
+                                </div>
+                                <div class="card-body">
+                                    <div class="author">
+                                        <a href="{{ route('user.index') }}">
+                                            <img class="avatar border-gray" src="../assets/img/faces/face-3.jpg" alt="...">
+                                            <h5 class="title"> {{ $user->name }} </h5>
+                                        </a>
+
+                                        <a href="mailto:{{ $user->email }}" class="description">
+                                            {{ $user->email }}
+                                        </a>
+
+                                    </div>
+                                    <p class="description text-center">
+                                        "Miembro de la
+                                        <br> Universidad de
+                                        <br> Guadalajara.
+                                    </p>
+                                </div>
+                                <hr>
+                                <div class="button-container mr-auto ml-auto">
+                                    <button href="#" class="btn btn-simple btn-link btn-icon">
+                                        <i class="fa fa-facebook-square"></i>
+                                    </button>
+                                    <button href="#" class="btn btn-simple btn-link btn-icon">
+                                        <i class="fa fa-twitter"></i>
+                                    </button>
+                                    <button href="#" class="btn btn-simple btn-link btn-icon">
+                                        <i class="fa fa-google-plus-square"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
+
+
+
+
+             
+
+          
 
              <footer class="footer">
                  <div class="container-fluid">
                      <nav>
                          <ul class="footer-menu">
                              <li>
-                                 <a href="{{ route('user.index') }}">
+                                 <a href="#">
                                      Inicio
                                  </a>
                              </li>
                              <li>
-                                 <a href=" {{ route('book.index') }} ">
+                                 <a href="#">
                                      Libros
                                  </a>
                              </li>
                              <li>
-                                 <a href=" {{ route('author.index') }} ">
+                                 <a href="#">
                                      Autores
                                  </a>
                              </li>
