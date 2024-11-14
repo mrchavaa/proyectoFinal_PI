@@ -236,7 +236,7 @@
                                 <div class="card-body">
                                     <div class="author">
                                         <a href="{{ route('user.index') }}">
-                                            <img class="avatar border-gray" src="../assets/img/faces/face-3.jpg" alt="...">
+                                            <img class="avatar border-gray" src="{{ asset('assets/img/alexander.jpg') }}" alt="...">
                                             <h5 class="title"> {{ $user->name }} </h5>
                                         </a>
 

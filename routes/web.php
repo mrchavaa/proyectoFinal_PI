@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
@@ -21,6 +22,9 @@ Route::get('/profile', function () {
 Route::resource('author', AuthorController::class);
 Route::resource('book', BookController::class);
 Route::resource('user', UserController::class);
+
+Route::resource('file', FileController::class)->except(['edit', 'update', 'show']);
+Route::get('file/download/{file}', [FileController::class, 'download'])->name('file.download');
 
 
 Route::middleware([

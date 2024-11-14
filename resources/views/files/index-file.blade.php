@@ -1,3 +1,4 @@
+
 <!-- 
 =========================================================
  Light Bootstrap Dashboard - v2.0.1
@@ -21,7 +22,7 @@
      <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('assets/img/apple-icon.png') }}">
      <link rel="icon" type="image/png" href=" {{ asset('assets/img/favicon.ico') }} ">
      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-     <title>Index Book</title>
+     <title>Index Author</title>
      <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
      <!--     Fonts and icons     -->
      <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
@@ -54,8 +55,8 @@
                             <p>Perfil</p>
                         </a>
                      </li>
-                     <li class="nav-item active">
-                        <a class="nav-link" href="dashboard.html">
+                     <li>
+                        <a class="nav-link" href=" {{ route('book.index') }} ">
                             <i class="nc-icon nc-circle-09"></i>
                             <p>Libros</p>
                         </a>
@@ -66,8 +67,8 @@
                              <p>Autores</p>
                          </a>
                      </li>
-                     <li>
-                         <a class="nav-link" href=" {{ route('file.index') }} ">
+                     <li class="nav-item active">
+                         <a class="nav-link" href="{{ route('file.index') }}">
                              <i class="nc-icon nc-paper-2"></i>
                              <p>Archivos</p>
                          </a>
@@ -175,52 +176,37 @@
             <div class="col-md-50">
                 <div class="card strpied-tabled-with-hover">
                     <div class="card-header">
-                        <h4 style="margin: 10px" class="card-title">Libros registrados</h4>
-                        <a style="margin: 10px" href=" {{ route('book.create') }} " class="btn btn-success">Agregar libro</a>
-                        <p style="margin: 10px" class="card-category">Libros compartidos por la comunidad de CUCEI</p>
+                        <h4 style="margin: 10px" class="card-title">Archivos disponibles</h4>
+                        <p style="margin: 10px" class="card-category">Libros en formato pdf para la comunidad de CUCEI</p>
                     </div>
-                    <div class="card-body table-full-width table-responsive">
-                        <table class="table table-hover table-striped table-sm">
-                            <thead>
+
+                    <form action="{{ route('file.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="form-group">
+                            <label style="margin: 25px" for="file">Selecciona el pdf a cargar:</label>
+                            <input type="file" name="file" id="file" class="form-control rounded-pill">
+                        </div>
+                        <button cla style="margin: 10px" type="submit" class="btn btn-danger">Subir archivo</button>
+                    </form>
+
+                    <table class="table table-hover table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre del archivo</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($files as $file)
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Título</th>
-                                    <th>Descripción</th>
-                                    <th>Autor</th>
-                                    <th>Género(s)</th>
-                                    <th>Acciones</th>
+                                    <td> {{ $file->id }} </td>
+                                    <td> {{ $file->orgName }} </td>
+                                    <td> <a class="btn btn-primary btn-sm" href="{{ route('file.download', $file) }}">Descargar</a> </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($books as $book)
-                                    <tr>
-                                        <td>{{ $book->id }}</td>
-                                        <td><a href="{{ route('book.show', $book) }}">{{ $book->title }}</a></td>
-                                        <td>{{ $book->description }}</td>
-                                        <td><a href="{{ route('author.show', $book->author) }}">{{ $book->author->name }}</a></td>
-                                        <td>
-                                            @foreach($book->genres as $genre)
-                                                {{ $genre->name }}
-                                            @endforeach
-                                        </td>
-                                        <td>
-                                            @canany(['delete', 'update'], $book)
-                                                <a style="margin: 5px" class="btn btn-warning" href="{{ route('book.edit', $book) }}">Editar</a>
-                                                <form action="{{ route('book.destroy', $book) }}" method="POST" style="display:inline;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button style="margin: 5px" class="btn btn-danger" type="submit" class="btn btn-link btn-sm" onclick="return confirm('¿Estás seguro de eliminar este libro?');">Eliminar</button>
-                                                </form>   
-                                            @endcanany
-                                            @cannot(['delete', 'update'], $book)
-                                                <p>No eres el propietario</p>
-                                            @endcannot
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -242,7 +228,7 @@
                                  </a>
                              </li>
                              <li>
-                                 <a href="{{ route('author.index') }}">
+                                 <a href=" {{ route('author.index') }} ">
                                      Autores
                                  </a>
                              </li>

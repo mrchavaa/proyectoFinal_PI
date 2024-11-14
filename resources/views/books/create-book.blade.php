@@ -96,27 +96,27 @@
                  </div>
                  <ul class="nav">
                      <li>
-                        <a class="nav-link" href="/profile">
+                        <a class="nav-link" href="{{ route('user.index') }}">
                             <i class="nc-icon nc-map-big"></i>
                             <p>Perfil</p>
                         </a>
                      </li>
                      <li class="nav-item active">
-                        <a class="nav-link" href="dashboard.html">
+                        <a class="nav-link" href="{{ route('book.index') }}">
                             <i class="nc-icon nc-circle-09"></i>
                             <p>Libros</p>
                         </a>
                      </li>
                      <li>
-                         <a class="nav-link" href="./table.html">
+                         <a class="nav-link" href="{{ route('author.index') }}">
                              <i class="nc-icon nc-badge"></i>
                              <p>Autores</p>
                          </a>
                      </li>
                      <li>
-                         <a class="nav-link" href="./typography.html">
+                         <a class="nav-link" href="{{ route('file.index') }}">
                              <i class="nc-icon nc-paper-2"></i>
-                             <p>Typography</p>
+                             <p>Archivos</p>
                          </a>
                      </li>
                      <li>
