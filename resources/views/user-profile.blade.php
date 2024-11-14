@@ -31,6 +31,17 @@
      <link href=" {{ asset('assets/css/light-bootstrap-dashboard.css?v=2.0.0 ') }} " rel="stylesheet" />
      <!-- CSS Just for demo purpose, don't include it in your project -->
      <link href="{{ asset('assets/css/demo.css') }}" rel="stylesheet" />
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
+     <style>
+        .udeg {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+     </style>
  </head>
  
  <body>
@@ -42,58 +53,35 @@
          Tip 2: you can also add an image using data-image tag
      -->
              <div class="sidebar-wrapper">
-                 <div class="logo">
-                     <a href="http://www.creative-tim.com" class="simple-text">
-                         Universidad de Guadalajara
-                     </a>
+                <div class="logo">
+                    <div class="udeg">
+                        <img src="{{ asset('assets/img/udeg-white.png') }}" alt="Logo UdeG">
+                     </div>
                  </div>
                  <ul class="nav">
-                     <li class="nav-item active">
-                         <a class="nav-link" href="./profile">
-                             <i class="nc-icon nc-circle-09"></i>
-                             <p>Perfil</p>
-                         </a>
+                     <li class="nav-item active"
+                     >
+                        <a class="nav-link" href="{{ route('user.index') }}">
+                            <i class="nc-icon nc-circle-09"></i>
+                            <p>Perfil</p>
+                        </a>
                      </li>
                      <li>
-                         <a class="nav-link" href="{{ route('book.index') }}">
-                             <i class="nc-icon nc-map-big"></i>
-                             <p>Libros</p>
-                         </a>
+                        <a class="nav-link" href=" {{ route('book.index') }} ">
+                            <i class="nc-icon nc-map-big"></i>
+                            <p>Libros</p>
+                        </a>
                      </li>
                      <li>
-                         <a class="nav-link" href=" {{ route('author.index') }} ">
+                         <a class="nav-link" href="{{ route('author.index') }}">
                              <i class="nc-icon nc-badge"></i>
                              <p>Autores</p>
                          </a>
                      </li>
                      <li>
-                         <a class="nav-link" href="./typography.html">
+                         <a class="nav-link" href="{{ route('file.index') }}">
                              <i class="nc-icon nc-paper-2"></i>
-                             <p>Typography</p>
-                         </a>
-                     </li>
-                     <li>
-                         <a class="nav-link" href="./icons.html">
-                             <i class="nc-icon nc-atom"></i>
-                             <p>Icons</p>
-                         </a>
-                     </li>
-                     <li>
-                         <a class="nav-link" href="./maps.html">
-                             <i class="nc-icon nc-pin-3"></i>
-                             <p>Maps</p>
-                         </a>
-                     </li>
-                     <li>
-                         <a class="nav-link" href="./notifications.html">
-                             <i class="nc-icon nc-bell-55"></i>
-                             <p>Notifications</p>
-                         </a>
-                     </li>
-                     <li class="nav-item active active-pro">
-                         <a class="nav-link active" href="upgrade.html">
-                             <i class="nc-icon nc-alien-33"></i>
-                             <p>Upgrade to PRO</p>
+                             <p>Archivos</p>
                          </a>
                      </li>
                  </ul>
@@ -157,10 +145,31 @@
                                      <a class="dropdown-item" href="#">Separated link</a>
                                  </div>
                              </li>
-                             <li class="nav-item">
-                                 <a class="nav-link" href="#pablo">
-                                     <span class="no-icon">Salir</span>
-                                 </a>
+                             <li class="nav-item">                            
+                                @guest
+                                        <li class="nav-item d-flex align-items-center">
+                                        <a href="{{ route('login') }}" class="nav-link text-body font-weight-bold px-0">
+                                            <i class="fa fa-user me-sm-1"></i>
+                                            <span class="d-sm-inline d-none">Iniciar sesión</span>
+                                        </a>
+                                        </li>
+                                @endguest
+
+                                @auth
+                                        <li class="nav-item d-flex align-items-center">
+                                        <a href="{{ route('logout') }}"
+                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                                        class="nav-link text-body font-weight-bold px-0"
+                                        >
+                                            <i class="fa fa-user me-sm-1"></i>
+                                            <span class="d-sm-inline d-none">Salir</span>
+                                        </a>
+                                        </li>
+                                        <form method="POST" action="{{ route('logout') }}" id="logout-form">
+                                             @csrf
+                                        </form>
+                                @endauth
+                                               
                              </li>
                          </ul>
                      </div>
@@ -182,41 +191,42 @@
                                             <div class="col-md-5 pr-1">
                                                 <div class="form-group">
                                                     <label>ID de usuario</label>
-                                                    <input type="text" class="form-control" disabled placeholder="Company" value="{{ $user->id }}">
+                                                    <input type="text" class="form-control" disabled placeholder="Company" value="{{ Auth::check() ? $user->id : 'N/A'}}">
                                                 </div>
                                             </div>
                                             <div class="col-md-3 px-1">
                                                 <div class="form-group">
-                                                    <label>Nombre</label>
-                                                    <input type="text" class="form-control" disabled placeholder="Nombre completo" value="{{ $user->name }}">
+                                                    <label>Rol</label>
+                                                    <input type="text" class="form-control" disabled placeholder="Nombre completo" value="{{ Auth::check() ? $user->role : 'Invitado' }}">
                                                 </div>
                                             </div>
                                             <div class="col-md-4 pl-1">
                                                 <div class="form-group">
-                                                    <label for="exampleInputEmail1">Correo electrónico</label>
-                                                    <input type="email" class="form-control" disabled placeholder="Correo electrónico" value=" {{ $user->email }} ">
+                                                    <label for="exampleInputEmail1">Nombre</label>
+                                                    <input type="email" class="form-control" disabled placeholder="Correo electrónico" value=" {{ Auth::check() ? $user->name : 'N/A' }} ">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6 pr-1">
                                                 <div class="form-group">
-                                                    <label>Fecha de verificación</label>
-                                                    <input type="text" class="form-control" disabled placeholder="Fecha de verificación" value="{{ $user->email_verified_at  }}">
+                                                    <label>Correo electrónico</label>
+                                                    <input type="text" class="form-control" disabled placeholder="Fecha de verificación" value="{{ Auth::check() ? $user->email : 'N/A'  }}">
                                                 </div>
                                             </div>
                                             <div class="col-md-6 pl-1">
                                                 <div class="form-group">
                                                     <label>Contraseña</label>
-                                                    <input type="password" class="form-control" disabled placeholder="Contraseña" value="{{ $user->password }}">
+                                                    {{-- No poner la contraseña real por seguridad, aunque sea el hash, mejor un valor ficticio --}}
+                                                    <input type="password" class="form-control" disabled placeholder="Contraseña" value="*************************">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label>Perfil creado en: </label>
-                                                    <input type="text" class="form-control" disabled placeholder="Home Address" value="{{ $user->created_at }}">
+                                                    <label>Fecha de creación del perfil: </label>
+                                                    <input type="text" class="form-control" disabled placeholder="Fecha de creación" value="{{ Auth::check() ? $user->created_at : 'N/A' }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -233,22 +243,21 @@
                                 <div class="card-image">
                                     <img src="https://ununsplash.imgix.net/photo-1431578500526-4d9613015464?fit=crop&fm=jpg&h=300&q=75&w=400" alt="...">
                                 </div>
-                                <div class="card-body">
                                     <div class="author">
                                         <a href="{{ route('user.index') }}">
-                                            <img class="avatar border-gray" src="{{ asset('assets/img/alexander.jpg') }}" alt="...">
-                                            <h5 class="title"> {{ $user->name }} </h5>
+                                            <img class="avatar border-gray" src="{{ Auth::check() ? asset('assets/img/alexander.jpg') : asset('assets/img/user.jpg') }}" alt="...">
+                                            <h5 class="title"> {{ Auth::check() ? $user->name : 'Invitado' }} </h5>
                                         </a>
 
-                                        <a href="mailto:{{ $user->email }}" class="description">
-                                            {{ $user->email }}
+                                        <a href="mailto:{{ Auth::check() ? $user->email : 'N/A' }}" class="description">
+                                            {{ Auth::check() ? $user->email : 'N/A' }}
                                         </a>
 
                                     </div>
                                     <p class="description text-center">
                                         "Miembro de la
                                         <br> Universidad de
-                                        <br> Guadalajara.
+                                        <br> Guadalajara".
                                     </p>
                                 </div>
                                 <hr>
@@ -267,50 +276,46 @@
                         </div>
                     </div>
                 </div>
+                
+             <footer class="footer">
+                <div class="container-fluid">
+                    <nav>
+                        <ul class="footer-menu">
+                            <li>
+                                <a href="{{ route('user.index') }}">
+                                    Inicio
+                                </a>
+                            </li>
+                            <li>
+                                <a href=" {{ route('book.index') }} ">
+                                    Libros
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('author.index') }}">
+                                    Autores
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/mrchavaa">
+                                    Mi GitHub
+                                </a>
+                            </li>
+                        </ul>
+                        <p class="copyright text-center">
+                            ©
+                            <script>
+                                document.write(new Date().getFullYear())
+                            </script>
+                            <a href="https://github.com/mrchavaa">Chava Chavita</a>, Programación Para Internet
+                        </p>
+                    </nav>
+                </div>
+            </footer>
             </div>
 
+            
 
-
-
-             
-
-          
-
-             <footer class="footer">
-                 <div class="container-fluid">
-                     <nav>
-                         <ul class="footer-menu">
-                             <li>
-                                 <a href="#">
-                                     Inicio
-                                 </a>
-                             </li>
-                             <li>
-                                 <a href="#">
-                                     Libros
-                                 </a>
-                             </li>
-                             <li>
-                                 <a href="#">
-                                     Autores
-                                 </a>
-                             </li>
-                             <li>
-                                 <a href="https://github.com/mrchavaa">
-                                     Mi GitHub
-                                 </a>
-                             </li>
-                         </ul>
-                         <p class="copyright text-center">
-                             ©
-                             <script>
-                                 document.write(new Date().getFullYear())
-                             </script>
-                             <a href="https://github.com/mrchavaa">Chava Chavita</a>, Programación Para Internet
-                         </p>
-                     </nav>
-                 </div>
-             </footer>
          </div>
      </div>
      <!--   -->

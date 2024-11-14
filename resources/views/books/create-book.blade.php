@@ -1,50 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Crear Libro</title>
-</head>
-<body>
-    <h1>Alta de libro</h1>
-    
-    <form action=" {{ route('book.store') }} " method="POST">
-        @csrf
-        <label for="title">Título: </label> <br>
-        <input type="text" name="title" id="title" value="{{ old('title') }}" required minlength="10"> <br> <br>
-        @error('title')
-            <div class="invalid-feedback"> {{ $message }} </div>
-        @enderror
-
-        <label for="description">Descripción</label> <br>
-        <textarea name="description" id="description" cols="30" rows="10" required minlength="100">{{ old('description') }}</textarea> <br> <br>
-        @error('description')
-             <div class="invalid-feedback"> {{ $message }} </div>
-        @enderror
-
-        <label for="author_id">Autor</label>
-        <select name="author_id" id="author_id" required>
-            @foreach ($authors as $author)
-                <option value=" {{ $author->id }} "> {{ $author->name }} </option>
-            @endforeach
-        </select>
-        <br><br>
-
-        <label for="genres">Géneros</label>
-        <select name="genres[]" id="genres" multiple>
-            @foreach ($genres as $genre)
-                <option value=" {{ $genre->id }} "> {{ $genre->name }} </option>
-            @endforeach
-        </select>
-
-        <br><br>
-
-        <button type="submit" id="btnSendForm">Guardar Libro</button>
-    </form>
-</body>
-</html>
-
 <!-- 
 =========================================================
  Light Bootstrap Dashboard - v2.0.1
@@ -68,7 +21,7 @@
      <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('assets/img/apple-icon.png') }}">
      <link rel="icon" type="image/png" href=" {{ asset('assets/img/favicon.ico') }} ">
      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-     <title>Index Book</title>
+     <title>Crear Libro</title>
      <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
      <!--     Fonts and icons     -->
      <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
@@ -78,6 +31,17 @@
      <link href=" {{ asset('assets/css/light-bootstrap-dashboard.css?v=2.0.0 ') }} " rel="stylesheet" />
      <!-- CSS Just for demo purpose, don't include it in your project -->
      <link href="{{ asset('assets/css/demo.css') }}" rel="stylesheet" />
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
+     <style>
+        .udeg {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+     </style>
  </head>
  
  <body>
@@ -90,9 +54,9 @@
      -->
              <div class="sidebar-wrapper">
                  <div class="logo">
-                     <a href="http://www.creative-tim.com" class="simple-text">
-                         Universidad de Guadalajara
-                     </a>
+                    <div class="udeg">
+                        <img src="{{ asset('assets/img/udeg-white.png') }}" alt="Logo UdeG">
+                     </div>
                  </div>
                  <ul class="nav">
                      <li>
@@ -117,30 +81,6 @@
                          <a class="nav-link" href="{{ route('file.index') }}">
                              <i class="nc-icon nc-paper-2"></i>
                              <p>Archivos</p>
-                         </a>
-                     </li>
-                     <li>
-                         <a class="nav-link" href="./icons.html">
-                             <i class="nc-icon nc-atom"></i>
-                             <p>Icons</p>
-                         </a>
-                     </li>
-                     <li>
-                         <a class="nav-link" href="./maps.html">
-                             <i class="nc-icon nc-pin-3"></i>
-                             <p>Maps</p>
-                         </a>
-                     </li>
-                     <li>
-                         <a class="nav-link" href="./notifications.html">
-                             <i class="nc-icon nc-bell-55"></i>
-                             <p>Notifications</p>
-                         </a>
-                     </li>
-                     <li class="nav-item active active-pro">
-                         <a class="nav-link active" href="upgrade.html">
-                             <i class="nc-icon nc-alien-33"></i>
-                             <p>Upgrade to PRO</p>
                          </a>
                      </li>
                  </ul>
@@ -205,9 +145,29 @@
                                  </div>
                              </li>
                              <li class="nav-item">
-                                 <a class="nav-link" href="#pablo">
-                                     <span class="no-icon">Salir</span>
-                                 </a>
+                                @guest
+                                        <li class="nav-item d-flex align-items-center">
+                                        <a href="{{ route('login') }}" class="nav-link text-body font-weight-bold px-0">
+                                            <i class="fa fa-user me-sm-1"></i>
+                                            <span class="d-sm-inline d-none">Iniciar sesión</span>
+                                        </a>
+                                        </li>
+                                @endguest
+
+                                @auth
+                                        <li class="nav-item d-flex align-items-center">
+                                        <a href="{{ route('logout') }}"
+                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                                        class="nav-link text-body font-weight-bold px-0"
+                                        >
+                                            <i class="fa fa-user me-sm-1"></i>
+                                            <span class="d-sm-inline d-none">Salir</span>
+                                        </a>
+                                        </li>
+                                        <form method="POST" action="{{ route('logout') }}" id="logout-form">
+                                             @csrf
+                                        </form>
+                                @endauth
                              </li>
                          </ul>
                      </div>
@@ -221,10 +181,57 @@
         <div class="row">
             <div class="col-md-50">
                 <div class="card strpied-tabled-with-hover">
-
+                    <div class="card-header">
+                        <h4 style="margin: 10px" class="card-title">Registrar libro</h4>
+                        <form action=" {{ route('book.store') }} " method="POST">
+                            @csrf
+                            <label for="title">Título: </label> <br>
+                            <input class="form-control" type="text" name="title" id="title" value="{{ old('title') }}" required minlength="10"> <br> <br>
+                            @error('title')
+                                <div class="invalid-feedback"> {{ $message }} </div>
+                            @enderror
                     
+                            <label for="description">Descripción</label> <br>
+                            <textarea class="form-control" style="resize: none; height: 150px" name="description" id="description" cols="30" rows="10" required minlength="100">{{ old('description') }}</textarea> <br> <br>
+                            @error('description')
+                                 <div class="invalid-feedback"> {{ $message }} </div>
+                            @enderror
+                    
+                            <label for="author_id">Autor</label>
+                            <select class="custom-select" name="author_id" id="author_id" required>
+                                @foreach ($authors as $author)
+                                    <option value=" {{ $author->id }} "> {{ $author->name }} </option>
+                                @endforeach
+                            </select>
+                            <br><br>
+                    
+                            <div class="mb-3">
+                                <label for="genres" class="form-label">Géneros</label>
+                                <div class="row">
+                                    @foreach ($genres->chunk(8) as $genreChunk)
+                                        <div class="col-md-4">
+                                            @foreach ($genreChunk as $genre)
+                                                <div>
+                                                    <input type="checkbox" name="genres[]" id="genre_{{ $genre->id }}" value="{{ $genre->id }}" 
+                                                           @if(in_array($genre->id, old('genres', []))) checked @endif>
+                                                    <label for="genre_{{ $genre->id }}">
+                                                        {{ $genre->name }}
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @endforeach
+                                </div>                                
+                            </div>
+                            
+                    
+                            <br><br>
+                    
+                            <div class="text-center">
+                                <button style="margin: 10px" class="btn btn-success btn-fill" type="submit" id="btnSendForm">Guardar Libro</button>
+                            </div>                        </form>
+                    </div>
                     <div class="card-body table-full-width table-responsive">
-
                     </div>
                 </div>
             </div>
@@ -237,17 +244,17 @@
                      <nav>
                          <ul class="footer-menu">
                              <li>
-                                 <a href="#">
+                                 <a href="{{ route('user.index') }}">
                                      Inicio
                                  </a>
                              </li>
                              <li>
-                                 <a href="#">
+                                 <a href=" {{ route('book.index') }} ">
                                      Libros
                                  </a>
                              </li>
                              <li>
-                                 <a href="#">
+                                 <a href=" {{ route('author.index') }} ">
                                      Autores
                                  </a>
                              </li>
