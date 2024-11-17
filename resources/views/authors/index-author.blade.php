@@ -208,7 +208,9 @@
                                     </td>
                                     
                                     <td>
-                                        <a href="{{ route('author.show', $author) }}"> {{ $author->name }} </a>
+                                        <div>
+                                            <a href="{{ route('author.show', $author) }}"> {{ $author->name }} </a>
+                                        </div>
                                     </td>
                 
                                     <td>
@@ -223,7 +225,7 @@
                 
                                     @can('delete', $author)
                                     <td>
-                                        <a style="margin: 5px" class="btn btn-warning" href=" {{ route('author.edit', $author) }} ">Editar</a>
+                                        <a style="margin: 5px;" class="btn btn-warning" href=" {{ route('author.edit', $author) }} ">Editar</a>
                 
                                         <form action=" {{ route('author.destroy', $author) }}" method="POST">
                                             @csrf
