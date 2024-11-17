@@ -18,6 +18,8 @@ return new class extends Migration
             $table->text('description');
             $table->foreignId('author_id')->constrained()->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 

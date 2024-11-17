@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('path');
             $table->string('mime');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
