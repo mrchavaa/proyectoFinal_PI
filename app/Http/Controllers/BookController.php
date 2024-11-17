@@ -83,7 +83,7 @@ class BookController extends Controller implements HasMiddleware
         $book->genres()->attach($request->genres);
 
          // Send email to all subscribers
-         $users = User::pluck('email');
+         $users = User::take(5)->pluck('email');
          foreach ($users as $user) {
              Mail::to($user)->send(new NewBookNotification($book));
          }       

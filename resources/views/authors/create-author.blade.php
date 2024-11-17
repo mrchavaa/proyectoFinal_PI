@@ -167,7 +167,7 @@
                                 @enderror
                     
                                 <label style="margin: 10px" for="bio">Biografía</label> <br>
-                                <textarea class="form-control" name="bio" id="bio" style="height: 200px" cols="80" required minlength="100" maxlength="1000" placeholder="Gabriel García Márquez (1927-2014) fue un escritor, guionista, editor y periodista colombiano, considerado uno de los autores más importantes del siglo XX..." >{{ old('bio') }}</textarea> <br>
+                                <textarea class="form-control" name="bio" id="bio" style="height: 200px; resize:none;" cols="80" required minlength="100" maxlength="1000" placeholder="Gabriel García Márquez (1927-2014) fue un escritor, guionista, editor y periodista colombiano, considerado uno de los autores más importantes del siglo XX..." >{{ old('bio') }}</textarea> <br>
                                 @error('bio')
                                     <div class="invalid-feedback"> {{ $message }} </div>
                                 @enderror
