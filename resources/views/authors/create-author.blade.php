@@ -35,6 +35,15 @@
      <link href="{{ asset('assets/css/demo.css') }}" rel="stylesheet" />
      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
+     <style>
+        .udeg {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+     </style>
+
  </head>
  
  <body>
@@ -47,9 +56,9 @@
      -->
              <div class="sidebar-wrapper">
                  <div class="logo">
-                     <a href="http://www.creative-tim.com" class="simple-text">
-                         Universidad de Guadalajara
-                     </a>
+                    <div class="udeg">
+                        <img src="{{ asset('assets/img/udeg-white.png') }}" alt="Logo UdeG">
+                     </div>
                  </div>
                  <ul class="nav">
                      <li>
@@ -138,9 +147,29 @@
                                  </div>
                              </li>
                              <li class="nav-item">
-                                 <a class="nav-link" href="#pablo">
-                                     <span class="no-icon">Salir</span>
-                                 </a>
+                                @guest
+                                        <li class="nav-item d-flex align-items-center">
+                                        <a href="{{ route('login') }}" class="nav-link text-body font-weight-bold px-0">
+                                            <i class="fa fa-user me-sm-1"></i>
+                                            <span class="d-sm-inline d-none">Iniciar sesión</span>
+                                        </a>
+                                        </li>
+                                @endguest
+
+                                @auth
+                                        <li class="nav-item d-flex align-items-center">
+                                        <a href="{{ route('logout') }}"
+                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                                        class="nav-link text-body font-weight-bold px-0"
+                                        >
+                                            <i class="fa fa-user me-sm-1"></i>
+                                            <span class="d-sm-inline d-none">Salir</span>
+                                        </a>
+                                        </li>
+                                        <form method="POST" action="{{ route('logout') }}" id="logout-form">
+                                             @csrf
+                                        </form>
+                                @endauth
                              </li>
                          </ul>
                      </div>

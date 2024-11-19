@@ -214,6 +214,9 @@
                                                 <div>
                                                     <input type="checkbox" name="genres[]" id="genre_{{ $genre->id }}" value="{{ $genre->id }}" 
                                                            @if(in_array($genre->id, old('genres', []))) checked @endif>
+                                                           @error('genres[]')
+                                                           <div class="invalid-feedback"> {{ $message }} </div>
+                                                           @enderror       
                                                     <label for="genre_{{ $genre->id }}">
                                                         {{ $genre->name }}
                                                     </label>
@@ -221,8 +224,8 @@
                                             @endforeach
                                         </div>
                                     @endforeach
-                                </div>                                
-                            </div>
+                                </div>                         
+                                </div>
                             
                     
                             <br><br>
